@@ -1,8 +1,17 @@
+/* 레이아웃 */
+.layout {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
 .container {
+  flex: 1;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   height: 100vh;
-  height: 100dvh; /* 모바일 키보드 대응 */
+  height: 100dvh;
   background-color: #0f0f1a;
   color: #e0e0e0;
   font-family: 'JetBrains Mono', monospace;
@@ -121,10 +130,14 @@
 }
 
 @keyframes bounce {
-  0%, 60%, 100% {
+
+  0%,
+  60%,
+  100% {
     transform: translateY(0);
     opacity: 0.5;
   }
+
   30% {
     transform: translateY(-6px);
     opacity: 1;
@@ -206,7 +219,7 @@
   }
 
   .textarea {
-    font-size: 1rem; /* iOS Safari 자동 줌인 방지 (16px 미만이면 줌인됨) */
+    font-size: 1rem;
   }
 
   .sendButton {

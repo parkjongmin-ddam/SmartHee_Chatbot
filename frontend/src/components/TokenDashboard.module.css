@@ -1,0 +1,182 @@
+.sidebar {
+    width: 260px;
+    min-width: 260px;
+    background: #0f0f1a;
+    border-left: 1px solid #1e1e2e;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+}
+
+.header {
+    padding: 16px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #a78bfa;
+    border-bottom: 1px solid #1e1e2e;
+    letter-spacing: 0.5px;
+}
+
+.section {
+    padding: 14px 16px;
+    border-bottom: 1px solid #1e1e2e;
+}
+
+.sectionTitle {
+    font-size: 10px;
+    color: #4b5563;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+}
+
+/* 세션 요약 */
+.statGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.statBox {
+    background: #1a1a2e;
+    border: 1px solid #1e1e2e;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+.statLabel {
+    font-size: 10px;
+    color: #4b5563;
+    margin-bottom: 4px;
+}
+
+.statValue {
+    font-size: 14px;
+    font-weight: 700;
+    color: #e2e8f0;
+}
+
+.cost {
+    color: #34d399;
+}
+
+/* 그래프 */
+.chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 6px;
+    height: 80px;
+    padding-bottom: 4px;
+}
+
+.barGroup {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    gap: 2px;
+}
+
+.barWrap {
+    flex: 1;
+    width: 100%;
+    display: flex;
+    align-items: flex-end;
+}
+
+.bar {
+    width: 100%;
+    background: #7c3aed40;
+    border-radius: 3px 3px 0 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    min-height: 2px;
+    overflow: hidden;
+}
+
+.barInput {
+    background: #7c3aed;
+    width: 100%;
+    border-radius: 3px 3px 0 0;
+}
+
+.barLabel {
+    font-size: 9px;
+    color: #4b5563;
+    white-space: nowrap;
+}
+
+.barValue {
+    font-size: 9px;
+    color: #6b7280;
+}
+
+.legend {
+    display: flex;
+    gap: 12px;
+    margin-top: 8px;
+    font-size: 10px;
+}
+
+.legendInput {
+    color: #7c3aed;
+}
+
+.legendOutput {
+    color: #7c3aed40;
+}
+
+/* 대화별 */
+.convList {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.convRow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 8px;
+    background: #1a1a2e;
+    border-radius: 6px;
+    font-size: 11px;
+}
+
+.convIndex {
+    color: #4b5563;
+    min-width: 22px;
+}
+
+.convTokens {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+}
+
+.inputBadge {
+    color: #818cf8;
+}
+
+.outputBadge {
+    color: #34d399;
+}
+
+.convCost {
+    color: #fbbf24;
+    font-size: 10px;
+}
+
+.empty {
+    color: #374151;
+    font-size: 11px;
+    text-align: center;
+    padding: 12px 0;
+}

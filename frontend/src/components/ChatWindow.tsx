@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, KeyboardEvent } from 'react'
 import { Message } from '../types'
 import styles from './ChatWindow.module.css'
+import TokenDashboard from './TokenDashboard'   // 추가
 
 export default function ChatWindow() {
   const [messages, setMessages] = useState<Message[]>([])
@@ -28,7 +29,7 @@ export default function ChatWindow() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-App-Token': import.meta.env.VITE_APP_TOKEN ?? '', // 추가
+          'X-App-Token': import.meta.env.VITE_APP_TOKEN ?? '',
         },
         body: JSON.stringify({ messages: nextMessages }),
       })
@@ -51,10 +52,7 @@ export default function ChatWindow() {
       }))
     } catch (err) {
       const msg = err instanceof Error ? `오류: ${err.message}` : '오류가 발생했습니다.'
-      setMessages([
-        ...nextMessages,
-        { role: 'assistant', content: msg },
-      ])
+      setMessages([...nextMessages, { role: 'assistant', content: msg }])
     } finally {
       setLoading(false)
     }
@@ -68,64 +66,55 @@ export default function ChatWindow() {
   }
 
   return (
-    <div className={styles.container}>
-      <div className={styles.header}>
-        <span>SmartHee Chatbot</span>
-        {(totalTokens.input > 0 || totalTokens.output > 0) && (
-          <span className={styles.tokenStats}>
-            ↑{totalTokens.input.toLocaleString()} ↓{totalTokens.output.toLocaleString()} tokens
-          </span>
-        )}
-      </div>
+    <div className={styles.layout}>                     {/* 변경: container → layout */}
+      <div className={styles.container}>
+        <div className={styles.header}>
+          <span>SmartHee Chatbot</span>
+        </div>
 
-      <div className={styles.messages}>
-        {messages.map((msg, i) => (
-          <div key={i} className={styles.messageGroup}>
-            <div
-              className={`${styles.bubble} ${msg.role === 'user' ? styles.userBubble : styles.assistantBubble
-                }`}
-            >
-              {msg.content}
-            </div>
-            {msg.role === 'assistant' && msg.inputTokens != null && (
-              <div className={styles.tokenBadge}>
-                ↑{msg.inputTokens.toLocaleString()} ↓{msg.outputTokens?.toLocaleString()} tokens
+        <div className={styles.messages}>
+          {messages.map((msg, i) => (
+            <div key={i} className={styles.messageGroup}>
+              <div className={`${styles.bubble} ${msg.role === 'user' ? styles.userBubble : styles.assistantBubble}`}>
+                {msg.content}
               </div>
-            )}
-          </div>
-        ))}
-
-        {loading && (
-          <div className={styles.loading}>
-            <div className={styles.dots}>
-              <span />
-              <span />
-              <span />
+              {msg.role === 'assistant' && msg.inputTokens != null && (
+                <div className={styles.tokenBadge}>
+                  ↑{msg.inputTokens.toLocaleString()} ↓{msg.outputTokens?.toLocaleString()} tokens
+                </div>
+              )}
             </div>
-          </div>
-        )}
+          ))}
+          {loading && (
+            <div className={styles.loading}>
+              <div className={styles.dots}><span /><span /><span /></div>
+            </div>
+          )}
+          <div ref={bottomRef} />
+        </div>
 
-        <div ref={bottomRef} />
+        <div className={styles.inputArea}>
+          <textarea
+            className={styles.textarea}
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder="메시지를 입력하세요..."
+            rows={1}
+            disabled={loading}
+          />
+          <button
+            className={styles.sendButton}
+            onClick={sendMessage}
+            disabled={loading || !input.trim()}
+          >
+            전송
+          </button>
+        </div>
       </div>
 
-      <div className={styles.inputArea}>
-        <textarea
-          className={styles.textarea}
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyDown={handleKeyDown}
-          placeholder="메시지를 입력하세요..."
-          rows={1}
-          disabled={loading}
-        />
-        <button
-          className={styles.sendButton}
-          onClick={sendMessage}
-          disabled={loading || !input.trim()}
-        >
-          전송
-        </button>
-      </div>
+      {/* 사이드바 추가 */}
+      <TokenDashboard messages={messages} totalTokens={totalTokens} />
     </div>
   )
 }
