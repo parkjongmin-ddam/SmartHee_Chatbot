@@ -2,6 +2,7 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
+  height: 100dvh; /* 모바일 키보드 대응 */
   background-color: #0f0f1a;
   color: #e0e0e0;
   font-family: 'JetBrains Mono', monospace;
@@ -108,6 +109,7 @@
 
 .inputArea {
   padding: 16px 24px;
+  padding-bottom: max(16px, env(safe-area-inset-bottom));
   background-color: #13131f;
   border-top: 1px solid #2a2a3e;
   display: flex;
@@ -163,4 +165,28 @@
   background-color: #1e1e30;
   color: #4a4a6a;
   cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+  .bubble {
+    max-width: 85%;
+  }
+
+  .messages {
+    padding: 16px;
+  }
+
+  .inputArea {
+    padding: 10px 12px;
+    padding-bottom: max(10px, env(safe-area-inset-bottom));
+  }
+
+  .textarea {
+    font-size: 1rem; /* iOS Safari 자동 줌인 방지 (16px 미만이면 줌인됨) */
+  }
+
+  .sendButton {
+    padding: 10px 14px;
+    min-width: 52px;
+  }
 }

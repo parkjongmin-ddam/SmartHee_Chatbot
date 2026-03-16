@@ -89,7 +89,7 @@ export default function ChatWindow() {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="메시지를 입력하세요... (Enter: 전송, Shift+Enter: 줄바꿈)"
+          placeholder="메시지를 입력하세요..."
           rows={1}
           disabled={loading}
         />
