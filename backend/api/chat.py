@@ -1,9 +1,13 @@
 import os
 import anthropic
-from fastapi import APIRouter, HTTPException
+import secrets
+from fastapi import APIRouter, HTTPException, Request, Header
 from pydantic import BaseModel
+from slowapi import Limiter
+from slowapi.util import get_remote_address
 
 router = APIRouter()
+limiter = Limiter(key_func=get_remote_address)
 
 
 class Message(BaseModel):
@@ -22,7 +26,16 @@ class ChatResponse(BaseModel):
 
 
 @router.post("/chat", response_model=ChatResponse)
-async def chat(request: ChatRequest):
+@limiter.limit("30/minute")
+async def chat(
+    request: Request,
+    body: ChatRequest,
+    x_app_token: str = Header(default=None)
+):
+    expected_token = os.getenv("APP_TOKEN")
+    if not expected_token or not secrets.compare_digest(x_app_token or "", expected_token):
+        raise HTTPException(status_code=401, detail="Unauthorized")
+
     api_key = os.getenv("ANTHROPIC_API_KEY")
     if not api_key:
         raise HTTPException(status_code=500, detail="ANTHROPIC_API_KEY not set")
@@ -33,7 +46,7 @@ async def chat(request: ChatRequest):
         model="claude-sonnet-4-5",
         max_tokens=1024,
         temperature=0.7,
-        messages=[{"role": m.role, "content": m.content} for m in request.messages],
+        messages=[{"role": m.role, "content": m.content} for m in body.messages],
     )
 
     return ChatResponse(

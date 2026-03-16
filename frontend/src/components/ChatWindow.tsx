@@ -26,7 +26,10 @@ export default function ChatWindow() {
     try {
       const res = await fetch('/api/chat', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'X-App-Token': import.meta.env.VITE_APP_TOKEN ?? '', // 추가
+        },
         body: JSON.stringify({ messages: nextMessages }),
       })
 
@@ -79,9 +82,8 @@ export default function ChatWindow() {
         {messages.map((msg, i) => (
           <div key={i} className={styles.messageGroup}>
             <div
-              className={`${styles.bubble} ${
-                msg.role === 'user' ? styles.userBubble : styles.assistantBubble
-              }`}
+              className={`${styles.bubble} ${msg.role === 'user' ? styles.userBubble : styles.assistantBubble
+                }`}
             >
               {msg.content}
             </div>
