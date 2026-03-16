@@ -17,6 +17,8 @@ class ChatRequest(BaseModel):
 
 class ChatResponse(BaseModel):
     reply: str
+    input_tokens: int
+    output_tokens: int
 
 
 @router.post("/chat", response_model=ChatResponse)
@@ -34,4 +36,8 @@ async def chat(request: ChatRequest):
         messages=[{"role": m.role, "content": m.content} for m in request.messages],
     )
 
-    return ChatResponse(reply=response.content[0].text)
+    return ChatResponse(
+        reply=response.content[0].text,
+        input_tokens=response.usage.input_tokens,
+        output_tokens=response.usage.output_tokens,
+    )

@@ -6,6 +6,7 @@ export default function ChatWindow() {
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
+  const [totalTokens, setTotalTokens] = useState({ input: 0, output: 0 })
   const bottomRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -34,8 +35,17 @@ export default function ChatWindow() {
         throw new Error(errData.detail || `HTTP ${res.status}`)
       }
 
-      const data: { reply: string } = await res.json()
-      setMessages([...nextMessages, { role: 'assistant', content: data.reply }])
+      const data: { reply: string; input_tokens: number; output_tokens: number } = await res.json()
+      setMessages([...nextMessages, {
+        role: 'assistant',
+        content: data.reply,
+        inputTokens: data.input_tokens,
+        outputTokens: data.output_tokens,
+      }])
+      setTotalTokens(prev => ({
+        input: prev.input + data.input_tokens,
+        output: prev.output + data.output_tokens,
+      }))
     } catch (err) {
       const msg = err instanceof Error ? `오류: ${err.message}` : '오류가 발생했습니다.'
       setMessages([
@@ -56,17 +66,30 @@ export default function ChatWindow() {
 
   return (
     <div className={styles.container}>
-      <div className={styles.header}>SmartHee Chatbot</div>
+      <div className={styles.header}>
+        <span>SmartHee Chatbot</span>
+        {(totalTokens.input > 0 || totalTokens.output > 0) && (
+          <span className={styles.tokenStats}>
+            ↑{totalTokens.input.toLocaleString()} ↓{totalTokens.output.toLocaleString()} tokens
+          </span>
+        )}
+      </div>
 
       <div className={styles.messages}>
         {messages.map((msg, i) => (
-          <div
-            key={i}
-            className={`${styles.bubble} ${
-              msg.role === 'user' ? styles.userBubble : styles.assistantBubble
-            }`}
-          >
-            {msg.content}
+          <div key={i} className={styles.messageGroup}>
+            <div
+              className={`${styles.bubble} ${
+                msg.role === 'user' ? styles.userBubble : styles.assistantBubble
+              }`}
+            >
+              {msg.content}
+            </div>
+            {msg.role === 'assistant' && msg.inputTokens != null && (
+              <div className={styles.tokenBadge}>
+                ↑{msg.inputTokens.toLocaleString()} ↓{msg.outputTokens?.toLocaleString()} tokens
+              </div>
+            )}
           </div>
         ))}
 
