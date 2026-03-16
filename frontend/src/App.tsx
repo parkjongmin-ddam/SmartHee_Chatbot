@@ -4,7 +4,7 @@ import PasswordGate from './components/PasswordGate'
 
 export default function App() {
   const [unlocked, setUnlocked] = useState(
-    localStorage.getItem('unlocked') === 'true'
+    sessionStorage.getItem('unlocked') === 'true'
   )
 
   if (!unlocked) {

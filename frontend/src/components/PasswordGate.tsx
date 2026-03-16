@@ -11,36 +11,32 @@ export default function PasswordGate({ onUnlock }: Props) {
   const [input, setInput] = useState('')
   const [error, setError] = useState(false)
 
-  const check = () => {
+  const handleSubmit = () => {
     if (input === PASSWORD) {
-      localStorage.setItem('unlocked', 'true')
+      sessionStorage.setItem('unlocked', 'true')
       onUnlock()
     } else {
       setError(true)
-      setInput('')
     }
   }
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') check()
+    if (e.key === 'Enter') handleSubmit()
   }
 
   return (
     <div className={styles.container}>
-      <div className={styles.box}>
-        <div className={styles.title}>SmartHee Chatbot</div>
-        <input
-          className={styles.input}
-          type="password"
-          value={input}
-          onChange={(e) => { setInput(e.target.value); setError(false) }}
-          onKeyDown={handleKeyDown}
-          placeholder="비밀번호 입력"
-          autoFocus
-        />
-        {error && <div className={styles.error}>비밀번호가 틀렸습니다</div>}
-        <button className={styles.button} onClick={check}>입장</button>
-      </div>
+      <h1 className={styles.title}>🔐 SmartHee</h1>
+      <input
+        type="password"
+        value={input}
+        onChange={e => setInput(e.target.value)}
+        onKeyDown={handleKeyDown}
+        className={styles.input}
+        placeholder="비밀번호 입력"
+      />
+      {error && <p className={styles.error}>비밀번호가 틀렸습니다.</p>}
+      <button onClick={handleSubmit} className={styles.button}>입장</button>
     </div>
   )
 }
